@@ -6,4 +6,11 @@ var connection = mysql.createConnection({
   password : 'root',
   database : 'burgers_db'
 });
+connection.connect(function (err) {
+	if (err) {
+		console.error('error connecting: ' + err.stack);
+		return;
+	}
+	console.log('connected to db as id ' + connection.threadId);
+});
 module.exports = connection;
