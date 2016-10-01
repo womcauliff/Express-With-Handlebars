@@ -35,7 +35,7 @@ var ORM = function() {
 		var arr = [];
 		for (var key in obj) {
 			if (obj.hasOwnProperty(key)) {
-				arr.push(key + '=' + connection.escape(obj[key]));
+				arr.push(key + '=' + obj[key]);
 			}
 		}
 		return arr.toString();
@@ -79,12 +79,14 @@ var ORM = function() {
 				+ 'VALUES ('
 				+ escapeValuePlaceholders(vals.length)
 				+ ')';
-		connection.query(q, [
-			vals
-		], function(error, results, fields) {
-			if(error) return callback(error);
-			callback(null, results);
-		});
+		connection.query(
+			q,
+			vals,
+			function(error, results, fields) {
+				if(error) return callback(error);
+				callback(null, results);
+			}
+		);
 	};
 
 	/**
@@ -102,8 +104,8 @@ var ORM = function() {
 	 */
 	this.updateOne = function(tablename, columnValueObj, condition, callback) {
 		var q = 'UPDATE ' + tablename
-				+ 'SET ' + objToSql(columnValueObj)
-				+ 'WHERE ' + connection.escape(condition);
+				+ ' SET ' + objToSql(columnValueObj)
+				+ ' WHERE ' + condition;
 		connection.query(q, function(error, results, fields) {
 			if(error) return callback(error);
 			callback(null, results);
