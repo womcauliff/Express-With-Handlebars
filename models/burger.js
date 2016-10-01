@@ -5,6 +5,8 @@ var ORM = require('../config/orm.js');
  * @constructor
  */
 var Burger = function() {
+	var burgerORM = new ORM();
+
 	/**
 	 * Returns all burger entries from the database.
 	 *
@@ -14,11 +16,11 @@ var Burger = function() {
 	 * failure, callback is invoked as callback(error) instead.
 	 */
 	this.all = function(cb) {
-		ORM.selectAll('burgers', function(err, res) {
+		burgerORM.selectAll('burgers', function(err, res) {
 			if(err) return cb(err);
 			cb(null, res);
 		});
-	}
+	};
 	/**
 	 * Creates a new burger entry in the database.
 	 *
@@ -32,11 +34,11 @@ var Burger = function() {
 	 * failure, callback is invoked as callback(error) instead.
 	 */
 	this.create = function(cols, vals, cb) {
-		ORM.insertOne('burgers', cols, vals, function(err, res) {
+		burgerORM.insertOne('burgers', cols, vals, function(err, res) {
 			if(err) return cb(err);
 			cb(null, res);
 		});
-	}
+	};
 	/**
 	 * Updates an existing burger entry in the database.
 	 *
@@ -50,11 +52,16 @@ var Burger = function() {
 	 * failure, callback is invoked as callback(error) instead.
 	 */
 	this.update = function(columnValueObj, condition, cb) {
-		ORM.updateOne('burgers', columnValueObj, condition, function(err, res) {
-			if(err) return cb(err);
-			cb(null, res);
-		});
-	}
-}
+		burgerORM.updateOne(
+			'burgers',
+			columnValueObj,
+			condition,
+			function(err, res) {
+				if(err) return cb(err);
+				cb(null, res);
+			}
+		);
+	};
+};
 
 module.exports = Burger;

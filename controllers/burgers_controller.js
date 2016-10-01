@@ -1,13 +1,15 @@
 var express = require('express');
 var router = express.Router();
-var burger = require('../models/burger.js');
+var Burger = require('../models/burger.js');
+var burgerModel = new Burger();
 
 router.get('/', function (req, res) {
 	res.redirect('/burgers');
 });
 
 router.get('/burgers', function (req, res) {
-	burger.all(function (data) {
+	burgerModel.all(function (err, data) {
+		if(err) throw err;
 		var hbsObject = {burgers : data};
 		console.log(hbsObject);
 		res.render('index', hbsObject);
@@ -15,9 +17,9 @@ router.get('/burgers', function (req, res) {
 });
 
 router.post('/burgers/create', function (req, res) {
-	burger.create(
+	burgerModel.create(
 		['burger_name', 'devoured'],
-		[req.body.name, req.body.devoured],
+		[req.body.burger_name, req.body.devoured],
 		function (err, result) {
 			if(err) throw err;
 			res.redirect('/');
@@ -28,7 +30,7 @@ router.post('/burgers/create', function (req, res) {
 router.put('/burgers/update/:id', function (req, res) {
 	var condition = 'id = ' + req.params.id;
 	console.log('condition', condition);
-	burger.update(
+	burgerModel.update(
 		{devoured : req.body.devoured},
 		condition,
 		function (err, result) {
